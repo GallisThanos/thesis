@@ -190,7 +190,7 @@ p, span, label {
 """, unsafe_allow_html=True)
 
 # ── Gemini setup ──────────────────────────────────────────────────────────────
-GEMINI_API_KEY = "REMOVED"
+GEMINI_API_KEY = "-----"
 genai.configure(api_key=GEMINI_API_KEY)
 gemini_model = genai.GenerativeModel("gemini-2.5-flash")
 
