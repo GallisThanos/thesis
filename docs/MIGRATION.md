@@ -14,7 +14,7 @@ Completed locally on 2026-10-29:
 
 Limits and pending items:
 
-- No real questionnaire CSV was supplied; no real-response end-to-end upload was tested.
+- The real questionnaire CSV (`data/results/responses_FINAL.csv`) passed the loader and preprocessing (51 responses); the Streamlit upload itself was not exercised with it.
 - No Gemini request was made. The retained SDK emits a deprecation warning; migrate to google-genai separately.
 - Local verification used Python 3.12. Python 3.13 checks are configured in CI but not run locally.
 - GitHub repository creation, live Actions/Dependabot runs and branch protection require GitHub access.

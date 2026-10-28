@@ -52,7 +52,7 @@ Alternatively copy `.env.example` to `.env`, fill in the key and explicitly load
 
 ## Questionnaire data and results
 
-Use the original questionnaire export (CSV). The existing preprocessing maps questionnaire column headings and answers; arbitrary survey schemas are not supported. No actual responses were supplied with this migration.
+Use the original questionnaire export (CSV). The existing preprocessing maps questionnaire column headings and answers; arbitrary survey schemas are not supported. The final export is stored in `data/results/responses_FINAL.csv` (51 responses) and can be uploaded directly to the dashboard.
 
 - `data/private/`: local raw responses; ignored by Git.
 - `data/results/`: reviewed, anonymized or aggregate results suitable for version control.
@@ -91,7 +91,7 @@ Merged from [Feature-Extraction-Second-Version-Thesis](https://github.com/Gallis
 Create an empty repository named `thesis` on GitHub (without initializing a README). If restoring from the accompanying bundle:
 
 ```bash
-git clone thesis.bundle thesis
+git clone -b main thesis.bundle thesis
 cd thesis
 git remote remove origin
 git remote add origin https://github.com/GallisThanos/thesis.git
