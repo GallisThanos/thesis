@@ -79,7 +79,7 @@ class CSVLoader:
             "platform": self.platform,
             "filename": self.filename,
             "encoding": self.encoding,
-            "separator": {",": "comma", ";": "semicolon", "\t": "tab"}.get(self.separator),
+            "separator": {",": "comma", ";": "semicolon", "\t": "tab"}.get(self.separator or ""),
         }
 
     def _bytes(self, source: Any) -> bytes:

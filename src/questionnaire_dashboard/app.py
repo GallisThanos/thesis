@@ -2,10 +2,9 @@ import altair as alt
 import pandas as pd
 import streamlit as st
 
-from loader import CSVLoader
-from preprocessing import QuestionnairePreprocessor
-from statistics import association_test, frequency_table, preference_summary
-
+from questionnaire_dashboard.loader import CSVLoader
+from questionnaire_dashboard.preprocessing import QuestionnairePreprocessor
+from questionnaire_dashboard.stats import association_test, frequency_table, preference_summary
 
 st.set_page_config(
     page_title="Questionnaire Results Evaluation",
@@ -271,9 +270,7 @@ def overview_chart(dataframe: pd.DataFrame) -> alt.Chart:
             color=alt.Color(
                 "Σύγκριση:N",
                 legend=None,
-                scale=alt.Scale(
-                    range=[ACCENT, ACCENT_SOFT, "#B0ABFF"]
-                ),
+                scale=alt.Scale(range=[ACCENT, ACCENT_SOFT, "#B0ABFF"]),
             ),
             tooltip=[
                 alt.Tooltip("Σύγκριση:N"),
@@ -368,9 +365,7 @@ with overview_tab:
 
     overview_rows = []
     for comparison in range(1, 4):
-        result = preference_summary(
-            filtered[f"comparison_{comparison}_preference"]
-        )
+        result = preference_summary(filtered[f"comparison_{comparison}_preference"])
         overview_rows.append(
             {
                 "Σύγκριση": f"Σύγκριση {comparison}",
@@ -510,22 +505,16 @@ with results_tab:
         detail_tab1, detail_tab2, detail_tab3, detail_tab4 = st.tabs(
             ["Προτίμηση", "Ποιότητα", "Διαφορά", "Παράγοντας"]
         )
-        detail_tab1.dataframe(
-            preference_table, use_container_width=True, hide_index=True
-        )
-        detail_tab2.dataframe(
-            quality_table, use_container_width=True, hide_index=True
-        )
-        detail_tab3.dataframe(
-            difference_table, use_container_width=True, hide_index=True
-        )
-        detail_tab4.dataframe(
-            factor_table, use_container_width=True, hide_index=True
-        )
+        detail_tab1.dataframe(preference_table, use_container_width=True, hide_index=True)
+        detail_tab2.dataframe(quality_table, use_container_width=True, hide_index=True)
+        detail_tab3.dataframe(difference_table, use_container_width=True, hide_index=True)
+        detail_tab4.dataframe(factor_table, use_container_width=True, hide_index=True)
 
 with stats_tab:
     st.markdown("### Στατιστική ερμηνεία")
-    st.caption("Έλεγχος πιθανής σχέσης ανάμεσα στα χαρακτηριστικά των συμμετεχόντων και στις επιλογές τους.")
+    st.caption(
+        "Έλεγχος πιθανής σχέσης ανάμεσα στα χαρακτηριστικά των συμμετεχόντων και στις επιλογές τους."
+    )
 
     with st.expander("Τι σημαίνουν οι δείκτες;", expanded=False):
         st.markdown(
@@ -565,11 +554,7 @@ with stats_tab:
         if outcome == "Προτίμηση"
         else f"comparison_{comparison}_quality"
     )
-    demographic_column = (
-        "sound_role"
-        if demographic == "Σχέση με τον ήχο"
-        else "experience_level"
-    )
+    demographic_column = "sound_role" if demographic == "Σχέση με τον ήχο" else "experience_level"
 
     result = association_test(
         filtered,
@@ -617,8 +602,7 @@ with stats_tab:
             f"Υπάρχει στατιστικά σημαντική συσχέτιση μεταξύ του "
             f"«{demographic}» και του «{outcome}» στη σύγκριση {comparison}."
             if result["significant"]
-            else
-            f"Δεν υπάρχει στατιστικά σημαντική συσχέτιση μεταξύ του "
+            else f"Δεν υπάρχει στατιστικά σημαντική συσχέτιση μεταξύ του "
             f"«{demographic}» και του «{outcome}» στη σύγκριση {comparison}."
         )
 

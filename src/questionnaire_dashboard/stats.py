@@ -14,9 +14,7 @@ def frequency_table(series: pd.Series) -> pd.DataFrame:
     total = int(counts.sum())
 
     result = counts.rename_axis("Κατηγορία").reset_index(name="Απαντήσεις")
-    result["Ποσοστό"] = (
-        result["Απαντήσεις"] / total * 100
-    ).round(1) if total else 0.0
+    result["Ποσοστό"] = (result["Απαντήσεις"] / total * 100).round(1) if total else 0.0
 
     return result
 
@@ -71,11 +69,7 @@ def association_test(
 
     n = int(contingency.to_numpy().sum())
     minimum_dimension = min(contingency.shape) - 1
-    cramers_v = (
-        sqrt(chi2 / (n * minimum_dimension))
-        if n > 0 and minimum_dimension > 0
-        else 0.0
-    )
+    cramers_v = sqrt(chi2 / (n * minimum_dimension)) if n > 0 and minimum_dimension > 0 else 0.0
 
     return {
         "valid": True,

@@ -34,8 +34,7 @@ class QuestionnairePreprocessor:
         dataframe.columns = [str(column).strip() for column in dataframe.columns]
 
         question_columns = [
-            column for column in dataframe.columns
-            if column not in self.TECHNICAL_COLUMNS
+            column for column in dataframe.columns if column not in self.TECHNICAL_COLUMNS
         ]
 
         blocks = self._split_question_blocks(question_columns)
@@ -61,9 +60,7 @@ class QuestionnairePreprocessor:
                 role_candidates.append(dataframe[semantic_columns["sound_role"]])
 
             if semantic_columns.get("experience_level"):
-                experience_candidates.append(
-                    dataframe[semantic_columns["experience_level"]]
-                )
+                experience_candidates.append(dataframe[semantic_columns["experience_level"]])
 
             for target, source_column in semantic_columns.items():
                 if target.startswith("comparison_") and source_column:
@@ -86,36 +83,28 @@ class QuestionnairePreprocessor:
         ]
 
         missing_columns = [
-            column for column in required
+            column
+            for column in required
             if column not in output.columns or output[column].isna().all()
         ]
 
         if missing_columns:
             raise ValueError(
-                "Δεν αναγνωρίστηκαν σωστά οι ακόλουθες ερωτήσεις: "
-                + ", ".join(missing_columns)
+                "Δεν αναγνωρίστηκαν σωστά οι ακόλουθες ερωτήσεις: " + ", ".join(missing_columns)
             )
 
         output = output.dropna(how="all", subset=required)
         output = output.drop_duplicates(subset=required).reset_index(drop=True)
 
-        experience_scores = {
-            value: index + 1
-            for index, value in enumerate(self.EXPERIENCE_ORDER)
-        }
-        difference_scores = {
-            value: index + 1
-            for index, value in enumerate(self.DIFFERENCE_ORDER)
-        }
+        experience_scores = {value: index + 1 for index, value in enumerate(self.EXPERIENCE_ORDER)}
+        difference_scores = {value: index + 1 for index, value in enumerate(self.DIFFERENCE_ORDER)}
 
-        output["experience_score"] = output["experience_level"].map(
-            experience_scores
-        )
+        output["experience_score"] = output["experience_level"].map(experience_scores)
 
         for comparison in range(1, 4):
             difference_column = f"comparison_{comparison}_difference"
-            output[f"comparison_{comparison}_difference_score"] = (
-                output[difference_column].map(difference_scores)
+            output[f"comparison_{comparison}_difference_score"] = output[difference_column].map(
+                difference_scores
             )
 
         self.dataframe = output
@@ -141,9 +130,7 @@ class QuestionnairePreprocessor:
         return {
             field: f"comparison_{comparison}_{field}"
             for field in ("preference", "difference", "quality", "factor")
-        } | {
-            "difference_score": f"comparison_{comparison}_difference_score"
-        }
+        } | {"difference_score": f"comparison_{comparison}_difference_score"}
 
     def _split_question_blocks(self, columns: list[str]) -> list[list[str]]:
         blocks: list[list[str]] = []
@@ -224,10 +211,7 @@ class QuestionnairePreprocessor:
     @staticmethod
     def _normalize(value: Any) -> str:
         text = unicodedata.normalize("NFD", str(value).lower())
-        text = "".join(
-            character for character in text
-            if unicodedata.category(character) != "Mn"
-        )
+        text = "".join(character for character in text if unicodedata.category(character) != "Mn")
         text = re.sub(r"^\s*\d+\.\s*", "", text)
         text = re.sub(r"[^a-zα-ω0-9]+", " ", text)
         return re.sub(r"\s+", " ", text).strip()
